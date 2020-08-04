@@ -1,4 +1,6 @@
+const path = require('path');
 const bunyan = require('bunyan');
+
 // Load package.json
 const pjs = require('../package.json');
 
@@ -15,6 +17,9 @@ module.exports = {
     version,
     serviceTimeout: 30,
     log: () => getLogger(name, version, 'debug'),
+    data: {
+      speakers: path.join(__dirname, '../data/speakers.json'),
+    },
   },
   production: {
     name,
