@@ -1,11 +1,13 @@
 const express = require('express');
-const SpeakersService = require('./lib/Speakers');
 
 const service = express();
 
+const Speakers = require('./lib/Speakers');
+
 module.exports = (config) => {
   const log = config.log();
-  const speakers = new SpeakersService(config.data.speakers);
+
+  const speakers = new Speakers(config.data.speakers);
 
   // Add a request logging middleware in development mode
   if (service.get('env') === 'development') {
@@ -15,7 +17,7 @@ module.exports = (config) => {
     });
   }
 
-  service.use('/images', express.static(config.data.images));
+  service.use('/images/', express.static(config.data.images));
 
   service.get('/list', async (req, res, next) => {
     try {
@@ -41,17 +43,17 @@ module.exports = (config) => {
     }
   });
 
-  service.get('/speaker/:shortname', async (req, res, next) => {
+  service.get('/artwork', async (req, res, next) => {
     try {
-      return res.json(await speakers.getSpeaker(req.params.shortname));
+      return res.json(await speakers.getAllArtwork());
     } catch (err) {
       return next(err);
     }
   });
 
-  service.get('/artworks', async (req, res, next) => {
+  service.get('/speaker/:shortname', async (req, res, next) => {
     try {
-      return res.json(await speakers.getAllArtwork());
+      return res.json(await speakers.getSpeaker(req.params.shortname));
     } catch (err) {
       return next(err);
     }
